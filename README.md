@@ -56,10 +56,10 @@ between. We suggest that this is, in part, due to relying on counterfactual lang
 		- adults ([pre-registration](https://osf.io/mwb9e)) 
 		- children ([pre-registration](https://osf.io/e8pqt))  	 
 - `R` contains the analysis scripts that were used to analyze data and generate figures
-	 (view a rendered file [here](https://davdrose.github.io/counterfactual_dev/)).
+	 (view a rendered file [here](https://davdrose.github.io/counterfactuals_dev/)).
 - `data/` contains anonymized data from all experiments
 - `docs/` contains all the experiment code for the adult versions of each experiment. You can preview the experiments below:
-	- [experiment1](https://davdrose.github.io/counterfactual_dev//experiment1/index.html),
-	- [experiment2](https://davdrose.github.io/counterfactual_dev//experiment2/index.html),
-	- [experiment3](https://davdrose.github.io/counterfactual_dev//experiment3/index.html)
+	- [experiment1](https://davdrose.github.io/counterfactuals_dev//experiment1/index.html),
+	- [experiment2](https://davdrose.github.io/counterfactuals_dev//experiment2/index.html),
+	- [experiment3](https://davdrose.github.io/counterfactuals_dev//experiment3/index.html)
 - `figures/` contains all the figures from the paper (generated using the script in `code/R/`). 
