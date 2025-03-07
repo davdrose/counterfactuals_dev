@@ -280,7 +280,7 @@ selected_indices = seq(from = 1, to = 480, by = 4)
 selected_data = df.exp1_children[selected_indices, ]
 
 # children total counterfactual
-df.selected.children.individual = selected_data %>%
+df.exp1.children.individual = selected_data %>%
     group_by(participant, age_group, age) %>% 
     summarize(pct_correct = mean(total_score) / 4,
               age_mean = mean(age)) %>% 
@@ -289,7 +289,7 @@ df.selected.children.individual = selected_data %>%
 
 
 # means by age for children
-df.children.means = selected_data %>%
+df.exp1.children.means = selected_data %>%
   mutate(pct_correct = total_score / 4) %>% 
   group_by(age_group) %>%
   summarize(
@@ -304,7 +304,7 @@ df.children.means = selected_data %>%
 
 
 # adult total counterfactual
-df.adults.individual = df.exp1_adults %>%
+df.exp1.adults.individual = df.exp1_adults %>%
   rename(trial_name = scenario) %>%
   group_by(participant) %>%
   summarize(
@@ -318,11 +318,11 @@ df.adults.individual = df.exp1_adults %>%
 
 
 # combine total counterfactual data for adults + children
-df.combined.individual = rbind(df.selected.children.individual, df.adults.individual)
+df.combined.individual = rbind(df.exp1.children.individual, df.exp1.adults.individual)
 
 
 # adult means
-df.adults.means = df.adults.individual %>%
+df.exp1.adults.means = df.exp1.adults.individual %>%
   group_by(age_group) %>%
   summarize(
     n = n(),
@@ -335,10 +335,10 @@ df.adults.means = df.adults.individual %>%
 
 
 # combine means for adults + children
-df.combinbed.means = rbind(df.children.means, df.adults.means)
+df.exp1.combinbed.means = rbind(df.exp1.children.means, df.exp1.adults.means)
 
 # plot text showing n for adults + children
-df.combined.text = df.combinbed.means %>% 
+df.exp1.combined.text = df.exp1.combinbed.means %>% 
     select(age_group, age_mean, n) %>% 
     mutate(label = n,
            label = ifelse(age_group == "3", str_c("n = ", n), n),
@@ -349,13 +349,19 @@ ggplot() +
              linetype = "dotted",
              color = "black",
              alpha = 0.8) +
-  geom_point(data = df.selected.children.individual,
+  geom_hline(yintercept = 0.5,
+             linetype = "dashed",
+             color = "black") +
+  geom_point(data = df.exp1.children.individual,
              mapping = aes(x = age,
                            y = pct_correct,
+                           fill = age,
                            color = age),
-             size = 1.5,
-             alpha = 1) +
-  geom_pointrange(data = df.combinbed.means %>% filter(age_group != "adults"),
+             shape = 21,
+             size = 2,
+             color = "grey30",
+             alpha = .4) +
+  geom_pointrange(data = df.exp1.combinbed.means %>% filter(age_group != "adults"),
                   mapping = aes(x = age_mean,
                                 y = mean,
                                 ymin = low,
@@ -364,9 +370,8 @@ ggplot() +
                   shape = 21, 
                   color = "black", 
                   size = .7,
-                  show.legend = FALSE,
-                  alpha = 0.8) +
-  geom_pointrange(data = df.combinbed.means %>% filter(age_group == "adults"),
+                  show.legend = FALSE) +
+  geom_pointrange(data = df.exp1.combinbed.means %>% filter(age_group == "adults"),
                   mapping = aes(x = age_mean,
                                 y = mean,
                                 ymin = low,
@@ -375,9 +380,8 @@ ggplot() +
                   fill = "grey",
                   color = "black",
                   size = .7,
-                  show.legend = FALSE,
-                  alpha = 0.8) +
-  geom_text(data = df.combined.text,
+                  show.legend = FALSE) +
+  geom_text(data = df.exp1.combined.text,
             mapping = aes(x = age_mean,
                           y = y,
                           label = label),
@@ -390,7 +394,7 @@ ggplot() +
   coord_cartesian(ylim = c(0, 1)) +
   scale_y_continuous(breaks = seq(0, 1, 0.25),
                      labels = str_c(seq(0, 1, 0.25) * 100, "%"),
-                     expand = expansion(add = c(0, 0.12))) + 
+                     expand = expansion(add = c(0.05, 0.12))) + 
   scale_x_continuous(breaks = c(seq(3, 7, 1), 8),
                      labels = c(seq(3, 7, 1), "adult"), 
                      expand = expansion(add = c(0.2, 0.5))) +
@@ -665,7 +669,7 @@ df.exp2.adults.means = df.exp2.adults.individual %>%
 df.exp2.combined.means = rbind(df.exp2.children.means, df.exp2.adults.means)
 
 
-df.exp2.combined.text = df.exp2.combinbed.means %>% 
+df.exp2.combined.text = df.exp2.combined.means %>% 
     select(age_group, age_mean, n) %>% 
     mutate(label = n,
            label = ifelse(age_group == "3", str_c("n = ", n), n),
@@ -677,12 +681,18 @@ ggplot() +
              linetype = "dotted",
              color = "black",
              alpha = 0.8) +
+  geom_hline(yintercept = 0.5,
+             linetype = "dashed",
+             color = "black") +
   geom_point(data = df.exp2.children.individual,
              mapping = aes(x = age,
                            y = pct_correct,
+                           fill = age,
                            color = age),
-             size = 1.5,
-             alpha = 1) +
+             shape = 21,
+             size = 2,
+             color = "grey30",
+             alpha = .4) +
   geom_pointrange(data = df.exp2.combined.means %>% filter(age_group != "adults"),
                   mapping = aes(x = age_mean,
                                 y = mean,
@@ -692,8 +702,7 @@ ggplot() +
                   shape = 21, 
                   color = "black", 
                   size = .7,
-                  show.legend = FALSE,
-                  alpha = 0.8) +
+                  show.legend = FALSE) +
   geom_pointrange(data = df.exp2.combined.means %>% filter(age_group == "adults"),
                   mapping = aes(x = age_mean,
                                 y = mean,
@@ -703,8 +712,7 @@ ggplot() +
                   fill = "grey",
                   color = "black",
                   size = .7,
-                  show.legend = FALSE,
-                  alpha = 0.8) +
+                  show.legend = FALSE) +
   geom_text(data = df.exp2.combined.text,
             mapping = aes(x = age_mean,
                           y = y,
@@ -718,7 +726,7 @@ ggplot() +
   coord_cartesian(ylim = c(0, 1)) +
   scale_y_continuous(breaks = seq(0, 1, 0.25),
                      labels = str_c(seq(0, 1, 0.25) * 100, "%"),
-                     expand = expansion(add = c(0, 0.12))) + 
+                     expand = expansion(add = c(0.05, 0.12))) + 
   scale_x_continuous(breaks = c(seq(3, 7, 1), 8),
                      labels = c(seq(3, 7, 1), "adult"), 
                      expand = expansion(add = c(0.2, 0.5))) +
@@ -742,6 +750,7 @@ ggplot() +
                          r = 0.5,
                          b = 0.5,
                          unit = "cm"))
+
 
 
 ggsave("../../figures/experiment2/exp2_results.pdf",  width = 6.5, height = 4)
@@ -1014,12 +1023,18 @@ ggplot() +
              linetype = "dotted",
              color = "black",
              alpha = 0.8) +
+  geom_hline(yintercept = 0.5,
+             linetype = "dashed",
+             color = "black") +
   geom_point(data = df.exp3.children.individual,
              mapping = aes(x = age,
                            y = pct_correct,
+                           fill = age,
                            color = age),
-             size = 1.5,
-             alpha = 1) +
+             shape = 21,
+             size = 2,
+             color = "grey30",
+             alpha = .4) +
   geom_pointrange(data = df.exp3.combined.means %>% filter(age_group != "adults"),
                   mapping = aes(x = age_mean,
                                 y = mean,
@@ -1029,8 +1044,7 @@ ggplot() +
                   shape = 21, 
                   color = "black", 
                   size = .7,
-                  show.legend = FALSE,
-                  alpha = 0.8) +
+                  show.legend = FALSE) +
   geom_pointrange(data = df.exp3.combined.means %>% filter(age_group == "adults"),
                   mapping = aes(x = age_mean,
                                 y = mean,
@@ -1040,8 +1054,7 @@ ggplot() +
                   fill = "grey",
                   color = "black",
                   size = .7,
-                  show.legend = FALSE,
-                  alpha = 0.8) +
+                  show.legend = FALSE) +
   geom_text(data = df.exp3.combined.text,
             mapping = aes(x = age_mean,
                           y = y,
@@ -1055,7 +1068,7 @@ ggplot() +
   coord_cartesian(ylim = c(0, 1)) +
   scale_y_continuous(breaks = seq(0, 1, 0.25),
                      labels = str_c(seq(0, 1, 0.25) * 100, "%"),
-                     expand = expansion(add = c(0, 0.12))) + 
+                     expand = expansion(add = c(0.05, 0.12))) + 
   scale_x_continuous(breaks = c(seq(3, 11, 1), 12),
                      labels = c(seq(3, 11, 1), "adult"), 
                      expand = expansion(add = c(0.2, 0.5))) +
